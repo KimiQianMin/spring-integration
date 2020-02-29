@@ -2,7 +2,7 @@ server:
   port: 8092
 spring:
   application:
-    name: tech-integration-spl-dg
+    name: tech-integration-spl
 eureka:
   client:
     healthcheck:

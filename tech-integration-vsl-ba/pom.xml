@@ -4,11 +4,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>tech-integration-vsl-ba</artifactId>
+	<artifactId>tech-integration-vsl</artifactId>
 	<packaging>jar</packaging>
 
-	<name>tech-integration-vsl-ba</name>
-	<description>Microservice with vsl | ba for spring cloud</description>
+	<name>tech-integration-vsl</name>
+	<description>Microservice with vessel process</description>
 
 	<parent>
 		<groupId>com.tech.integration</groupId>

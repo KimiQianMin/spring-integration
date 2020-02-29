@@ -4,11 +4,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>tech-integration-spl-dg</artifactId>
+	<artifactId>tech-integration-spl</artifactId>
 	<packaging>jar</packaging>
 
-	<name>tech-integration-spl-dg</name>
-	<description>Microservice with spl | dg for spring cloud</description>
+	<name>tech-integration-spl</name>
+	<description>Microservice with special cargo process</description>
 
 	<parent>
 		<groupId>com.tech.integration</groupId>

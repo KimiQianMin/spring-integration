@@ -8,6 +8,22 @@ security:
 spring:
   application:
     name: spring-cloud-zuul
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/psa_security_demo?useUnicode=yes&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: root
+    max-active: 100
+    min-idle: 10
+    min-evictable-idle-time-millis: 1800000
+    test-on-borrow: true
+    test-on-return: true
+    test-while-idle: true
+    validation-query: select 1
+  jpa:
+    generate: true
+    show-sql: true
+    properties.hibernate.format_sql: true
     
 server:
   port: 8003
@@ -26,8 +42,24 @@ eureka:
 zuul:
   routes:
     vsl-ba:
-      path: /vsl-ba/**
-      service-id: tech-integration-vsl-ba
+      path: /api-vsl/**
+      service-id: tech-integration-vsl
     spl-dg:
-      path: /spl-dg/**
-      service-id: tech-integration-spl-dg
+      path: /api-spl/**
+      service-id: tech-integration-spl
+      
+tech:
+  security:
+    browser:
+      initLoginPage: /authentication/require
+      loginPage: /tech-signin.html
+      loginProcessingUrl: /authentication/form
+    loginType: REDIRECT
+    validateCode:
+      imageCode:
+        width: 200
+        height: 40
+        length: 4
+        expireIn: 60
+        imageCodeUrl: /code/image
+        filterUrls: /authentication/form,/user/getUser

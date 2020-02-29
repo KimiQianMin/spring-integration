@@ -1,8 +1,8 @@
 server:
-  port: 8091
+  port: 8094
 spring:
   application:
-    name: tech-integration-vsl-ba
+    name: tech-integration-vsl
 eureka:
   client:
     healthcheck:

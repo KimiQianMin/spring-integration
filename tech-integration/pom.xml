@@ -53,10 +53,10 @@
 		<module>../tech-security-core</module>
 		<module>../tech-security-demo</module>
 		 -->
-		<module>../tech-integration-spl-dg</module>
 		<module>../tech-integration-eureka</module>
-		<module>../tech-integration-vsl-ba</module>
 		<module>../tech-integration-zuul</module>
+		<module>../tech-integration-spl</module>
+		<module>../tech-integration-vsl</module>
 	</modules>
 
 </project>
