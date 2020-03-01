@@ -31,8 +31,9 @@ public class ValidateCodeController {
 		logger.info("createCode is calling... ");
 
 		ImageCode imageCode = imageCodeGenerator.createImageCode();
+		ImageCode savedImageCode = new ImageCode(imageCode.getCode(), imageCode.getExpireTime());
 		sessionStrategy.setAttribute(new ServletWebRequest(request), ZuulConstants.VALIDATE_CODE_IMAGE_CODE_SESSION_KEY,
-				imageCode);
+				savedImageCode);
 		ImageIO.write(imageCode.getImage(), "JPEG", response.getOutputStream());
 	}
 

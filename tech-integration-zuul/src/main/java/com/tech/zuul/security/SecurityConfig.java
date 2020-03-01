@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
 import com.tech.zuul.security.authentication.TechAuthenticationFailureHandler;
 import com.tech.zuul.security.authentication.TechAuthenticationSuccessHandler;
@@ -48,6 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private UserDetailsService techUserDetailsService;
+	
+	@Autowired
+	private SessionInformationExpiredStrategy expiredSessionStategy;
 	
 	@Bean
 	public PasswordEncoder passwordencoder() {
@@ -87,10 +91,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
 				.userDetailsService(techUserDetailsService)
 				.and()
+			.sessionManagement()
+				.invalidSessionUrl(securityProperties.getSession().getInvalidSessionUrl())
+				.maximumSessions(1)
+				//.maxSessionsPreventsLogin(true)
+				.expiredSessionStrategy(expiredSessionStategy)
+				.and()
+				.and()
 			.authorizeRequests()
 				.antMatchers(securityProperties.getBrowser().getInitLoginPage(), 
 						securityProperties.getBrowser().getLoginPage(),
-						securityProperties.getValidateCode().getImageCode().getImageCodeUrl()
+						securityProperties.getValidateCode().getImageCode().getImageCodeUrl(),
+						securityProperties.getSession().getInvalidSessionUrl()
 						)
 					.permitAll()
 				.anyRequest()

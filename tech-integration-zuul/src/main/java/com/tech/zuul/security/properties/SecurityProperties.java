@@ -11,6 +11,8 @@ public class SecurityProperties {
 
 	private ValidateCodeProperties validateCode = new ValidateCodeProperties();
 
+	private SessionProperties session = new SessionProperties();
+
 	public BrowserProperties getBrowser() {
 		return browser;
 	}
@@ -33,6 +35,14 @@ public class SecurityProperties {
 
 	public void setValidateCode(ValidateCodeProperties validateCode) {
 		this.validateCode = validateCode;
+	}
+
+	public SessionProperties getSession() {
+		return session;
+	}
+
+	public void setSession(SessionProperties session) {
+		this.session = session;
 	}
 
 }

@@ -52,11 +52,18 @@ public class SecurityController {
 		return new SimpleResponse("Authentication is required, redirect to sign in page...");
 	}
 
+	@GetMapping("/session/invalid")
+	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+	public SimpleResponse sessionInvalid() {
+		logger.info("sessionInvalid() is starting...");
+		return new SimpleResponse("Session is invalid");
+	}
+
 	@GetMapping("/user/getUser")
 	public Object getUser() {
 		return SecurityContextHolder.getContext().getAuthentication();
 	}
-	
+
 	@GetMapping("/user/getPrincipal")
 	public Object getUser(Authentication authentication) {
 		return authentication.getPrincipal();
