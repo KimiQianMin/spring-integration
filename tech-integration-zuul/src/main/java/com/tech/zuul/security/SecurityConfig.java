@@ -21,6 +21,7 @@ import org.springframework.security.web.session.SessionInformationExpiredStrateg
 
 import com.tech.zuul.security.authentication.TechAuthenticationFailureHandler;
 import com.tech.zuul.security.authentication.TechAuthenticationSuccessHandler;
+import com.tech.zuul.security.authorisation.AuthorisationConfigurerManager;
 import com.tech.zuul.security.properties.SecurityProperties;
 import com.tech.zuul.security.validate.code.ImageCodeGenerator;
 import com.tech.zuul.security.validate.code.ValidateCodeFilter;
@@ -52,6 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private SessionInformationExpiredStrategy expiredSessionStategy;
+	
+	@Autowired
+	private AuthorisationConfigurerManager authorisationConfigureManager;
 	
 	@Bean
 	public PasswordEncoder passwordencoder() {
@@ -98,20 +102,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.expiredSessionStrategy(expiredSessionStategy)
 				.and()
 				.and()
-			.authorizeRequests()
-				.antMatchers(securityProperties.getBrowser().getInitLoginPage(), 
-						securityProperties.getBrowser().getLoginPage(),
-						securityProperties.getValidateCode().getImageCode().getImageCodeUrl(),
-						securityProperties.getSession().getInvalidSessionUrl()
-						)
-					.permitAll()
-				.anyRequest()
-					.authenticated()
-					.and()
+//			.authorizeRequests()
+//				.antMatchers(securityProperties.getBrowser().getInitLoginPage(), 
+//						securityProperties.getBrowser().getLoginPage(),
+//						securityProperties.getValidateCode().getImageCode().getImageCodeUrl(),
+//						securityProperties.getSession().getInvalidSessionUrl()
+//						)
+//					.permitAll()
+//				.antMatchers(HttpMethod.GET, "/api-vsl/**").access("hasAuthority('VSL_EXT') or hasAuthority('VSL_TERMOPR')")
+//				.anyRequest()
+//					.authenticated()
+//					.and()
 				//TODO: understand spring csrf
 			.csrf()
 				.disable()
 			;
+		
+		authorisationConfigureManager.config(http.authorizeRequests());
 	
 	}
 

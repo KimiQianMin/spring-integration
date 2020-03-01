@@ -24,7 +24,7 @@ public class TechUserDetailsService implements UserDetailsService {
 		logger.info("username - {}", username);
 		return new User(username, passwordEncoder.encode("123456"), 
 				true, true, true, true,
-				AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+				AuthorityUtils.commaSeparatedStringToAuthorityList("VSL_EXT"));
 	}
 
 }
