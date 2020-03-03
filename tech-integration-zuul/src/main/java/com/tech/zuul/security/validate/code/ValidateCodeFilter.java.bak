@@ -26,6 +26,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.tech.zuul.ZuulConstants;
 import com.tech.zuul.security.properties.SecurityProperties;
+import com.tech.zuul.security.validate.code.image.ImageCode;
 
 @Component
 public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {

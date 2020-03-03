@@ -1,0 +1,13 @@
+package com.tech.zuul.security.validate.code;
+
+import org.springframework.web.context.request.ServletWebRequest;
+
+public interface ValidateCodeRepository {
+
+	void save(ServletWebRequest request, ValidateCode code, ValidateCodeType validateCodeType);
+
+	ValidateCode get(ServletWebRequest request, ValidateCodeType validateCodeType);
+
+	void remove(ServletWebRequest request, ValidateCodeType codeType);
+
+}

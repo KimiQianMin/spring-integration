@@ -1,9 +1,9 @@
 package com.tech.zuul.security.validate.code;
 
-import java.io.IOException;
+import org.springframework.web.context.request.ServletWebRequest;
 
 public interface ValidateCodeGenerator {
-	
-	ImageCode createImageCode() throws IOException;
+
+	ValidateCode generate(ServletWebRequest request);
 
 }

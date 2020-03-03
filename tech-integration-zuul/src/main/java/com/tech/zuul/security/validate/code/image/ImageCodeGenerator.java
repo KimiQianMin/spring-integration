@@ -1,4 +1,4 @@
-package com.tech.zuul.security.validate.code;
+package com.tech.zuul.security.validate.code.image;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,30 +7,34 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import com.tech.zuul.security.properties.SecurityProperties;
+import com.tech.zuul.security.validate.code.ValidateCode;
+import com.tech.zuul.security.validate.code.ValidateCodeGenerator;
 
+@Component("imageValidateCodeGenerator")
 public class ImageCodeGenerator implements ValidateCodeGenerator {
 
 	@Autowired
 	private SecurityProperties securityProperties;
 
 	@Override
-	public ImageCode createImageCode() throws IOException {
+	public ValidateCode generate(ServletWebRequest request) {
 		String code = RandomStringUtils.randomNumeric(securityProperties.getValidateCode().getImageCode().getLength());
 		BufferedImage image = createImageCode(securityProperties.getValidateCode().getImageCode().getWidth(),
 				securityProperties.getValidateCode().getImageCode().getHeight(), code);
 		return new ImageCode(image, code, securityProperties.getValidateCode().getImageCode().getExpireIn());
 	}
 
-	private static BufferedImage createImageCode(int w, int h, String code) throws IOException {
+	private static BufferedImage createImageCode(int w, int h, String code) {
 		int verifySize = code.length();
 		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		Random rand = new Random();

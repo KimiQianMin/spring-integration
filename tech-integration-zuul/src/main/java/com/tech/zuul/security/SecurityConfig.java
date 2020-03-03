@@ -23,9 +23,11 @@ import com.tech.zuul.security.authentication.TechAuthenticationFailureHandler;
 import com.tech.zuul.security.authentication.TechAuthenticationSuccessHandler;
 import com.tech.zuul.security.authorisation.AuthorisationConfigurerManager;
 import com.tech.zuul.security.properties.SecurityProperties;
-import com.tech.zuul.security.validate.code.ImageCodeGenerator;
-import com.tech.zuul.security.validate.code.ValidateCodeFilter;
 import com.tech.zuul.security.validate.code.ValidateCodeGenerator;
+import com.tech.zuul.security.validate.code.filter.ValidateCodeFilter;
+import com.tech.zuul.security.validate.code.image.ImageCodeGenerator;
+import com.tech.zuul.security.validate.code.sms.DefaultSmsCodeSender;
+import com.tech.zuul.security.validate.code.sms.SmsCodeSender;
 
 @Configuration
 @EnableConfigurationProperties(SecurityProperties.class)
@@ -69,6 +71,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Bean
+	@ConditionalOnMissingBean(SmsCodeSender.class)
+	public SmsCodeSender smsCodeSender() {
+		return new DefaultSmsCodeSender(); 
+	}
+	
+	@Bean
 	public PersistentTokenRepository persistentTokenRepository() {
 		JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
 		tokenRepository.setDataSource(dataSource);
@@ -103,10 +111,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.and()
 //			.authorizeRequests()
-//				.antMatchers(securityProperties.getBrowser().getInitLoginPage(), 
+//				.antMatchers(
+//						securityProperties.getBrowser().getInitLoginPage(), 
 //						securityProperties.getBrowser().getLoginPage(),
-//						securityProperties.getValidateCode().getImageCode().getImageCodeUrl(),
-//						securityProperties.getSession().getInvalidSessionUrl()
+//						//securityProperties.getValidateCode().getImageCode().getCodeUrl(),
+//						securityProperties.getSession().getInvalidSessionUrl(),
+//						"/code/*"
 //						)
 //					.permitAll()
 //				.antMatchers(HttpMethod.GET, "/api-vsl/**").access("hasAuthority('VSL_EXT') or hasAuthority('VSL_TERMOPR')")
