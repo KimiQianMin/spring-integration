@@ -47,16 +47,11 @@
 	</build>
 
 	<modules>
-		<!--
-		<module>../tech-security-app</module>
-		<module>../tech-security-browser</module>
-		<module>../tech-security-core</module>
-		<module>../tech-security-demo</module>
-		 -->
 		<module>../tech-integration-eureka</module>
 		<module>../tech-integration-zuul</module>
-		<module>../tech-integration-spl</module>
-		<module>../tech-integration-vsl</module>
+		<module>../tech-integration-fw</module>
+		<module>../tech-integration-spl-dg</module>
+		<module>../tech-integration-vsl-ba</module>
 	</modules>
 
 </project>

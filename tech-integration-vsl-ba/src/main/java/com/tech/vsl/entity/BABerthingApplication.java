@@ -1,19 +1,20 @@
 package com.tech.vsl.entity;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 public class BABerthingApplication {
 
-	private Long id;
+	private BigInteger id;
 	private String serverPort;
 	private String terminal;
 	private Date berthingTime;
 
-	public Long getId() {
+	public BigInteger getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(BigInteger id) {
 		this.id = id;
 	}
 
@@ -39,12 +40,6 @@ public class BABerthingApplication {
 
 	public void setBerthingTime(Date berthingTime) {
 		this.berthingTime = berthingTime;
-	}
-
-	@Override
-	public String toString() {
-		return "BerthingApplication [id=" + id + ", serverPort=" + serverPort + ", terminal=" + terminal
-				+ ", berthingTime=" + berthingTime + "]";
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.tech.spl.service;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tech.fw.util.TechContextUtil;
 import com.tech.spl.entity.DGDDeclaration;
 
 @Component
@@ -31,28 +33,25 @@ public class DGDDeclarationService {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Autowired
+	private TechContextUtil contextUtil;
+
 	private final String URL_VSL_BA = "http://tech-integration-vsl/vsl/ba/";
 
 	private final String URL_ZUUL_USER_GETPRINCIPAL = "http://tech-integration-zuul/user/getPrincipal";
 
 	public DGDDeclaration getDeclaration(String cookie, Integer id) {
+
 		DGDDeclaration d = new DGDDeclaration();
 
 		ObjectMapper mapper = new ObjectMapper();
 		String json = restTemplate.getForObject(URL_VSL_BA + id, String.class);
 		logger.info("json - {}", json);
 
+		Map<String, Object> map = null;
+
 		try {
-			Map<String, Object> map = mapper.readValue(json, Map.class);
-
-			d.setId((Integer) map.get("id"));
-			d.setBaTerminal("SG_TERMAIL_" + map.get("id"));
-			d.setBerthingTime(new Date((Long) map.get("berthingTime")));
-			d.setBaServerPort((String) map.get("serverPort"));
-
-			d.setChemicalName("Test");
-			d.setServerPort(serverPort);
-
+			map = mapper.readValue(json, Map.class);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -61,9 +60,20 @@ public class DGDDeclarationService {
 			e.printStackTrace();
 		}
 
+		d.setId(new BigInteger("1"));
+		d.setChemicalName("Test");
+		d.setServerPort(serverPort);
+
+		d.setBaId((BigInteger) map.get("baId"));
+		d.setBaServerPort((String) map.get("baServerPort"));
+		d.setBaTerminal((String) map.get("baTerminal"));
+		d.setBaBerthingTime((Date) map.get("baBerthingTime"));
+
 		logger.info("Declaration - {}", d);
 
-		getPrincipal(cookie);
+		logger.info(contextUtil.getTechContext(cookie).toString());
+
+		// getPrincipal(cookie);
 
 		return d;
 	}

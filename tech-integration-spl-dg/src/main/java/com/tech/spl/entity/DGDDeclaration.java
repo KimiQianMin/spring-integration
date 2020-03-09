@@ -1,46 +1,25 @@
 package com.tech.spl.entity;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 public class DGDDeclaration {
 
-	private Integer id;
-	private String baServerPort;
-	private String baTerminal;
-	private Date berthingTime;
+	private BigInteger id;
 	private String chemicalName;
 	private String serverPort;
 
-	public Integer getId() {
+	private BigInteger baId;
+	private String baServerPort;
+	private String baTerminal;
+	private Date baBerthingTime;
+
+	public BigInteger getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(BigInteger id) {
 		this.id = id;
-	}
-
-	public String getBaServerPort() {
-		return baServerPort;
-	}
-
-	public void setBaServerPort(String baServerPort) {
-		this.baServerPort = baServerPort;
-	}
-
-	public String getBaTerminal() {
-		return baTerminal;
-	}
-
-	public void setBaTerminal(String baTerminal) {
-		this.baTerminal = baTerminal;
-	}
-
-	public Date getBerthingTime() {
-		return berthingTime;
-	}
-
-	public void setBerthingTime(Date berthingTime) {
-		this.berthingTime = berthingTime;
 	}
 
 	public String getChemicalName() {
@@ -59,11 +38,36 @@ public class DGDDeclaration {
 		this.serverPort = serverPort;
 	}
 
-	@Override
-	public String toString() {
-		return "Declaration [id=" + id + ", baServerPort=" + baServerPort + ", baTerminal=" + baTerminal
-				+ ", berthingTime=" + berthingTime + ", chemicalName=" + chemicalName + ", serverPort=" + serverPort
-				+ "]";
+	public BigInteger getBaId() {
+		return baId;
+	}
+
+	public void setBaId(BigInteger baId) {
+		this.baId = baId;
+	}
+
+	public String getBaServerPort() {
+		return baServerPort;
+	}
+
+	public void setBaServerPort(String baServerPort) {
+		this.baServerPort = baServerPort;
+	}
+
+	public String getBaTerminal() {
+		return baTerminal;
+	}
+
+	public void setBaTerminal(String baTerminal) {
+		this.baTerminal = baTerminal;
+	}
+
+	public Date getBaBerthingTime() {
+		return baBerthingTime;
+	}
+
+	public void setBaBerthingTime(Date baBerthingTime) {
+		this.baBerthingTime = baBerthingTime;
 	}
 
 }
