@@ -70,4 +70,11 @@ public class DGDDeclaration {
 		this.baBerthingTime = baBerthingTime;
 	}
 
+	@Override
+	public String toString() {
+		return "DGDDeclaration [id=" + id + ", chemicalName=" + chemicalName + ", serverPort=" + serverPort + ", baId="
+				+ baId + ", baServerPort=" + baServerPort + ", baTerminal=" + baTerminal + ", baBerthingTime="
+				+ baBerthingTime + "]";
+	}
+
 }

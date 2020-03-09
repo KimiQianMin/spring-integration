@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tech.fw.util.TechContextUtil;
 import com.tech.spl.entity.DGDDeclaration;
 
 @Component
@@ -33,8 +32,8 @@ public class DGDDeclarationService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Autowired
-	private TechContextUtil contextUtil;
+	// @Autowired
+	// private TechContextUtil contextUtil;
 
 	private final String URL_VSL_BA = "http://tech-integration-vsl/vsl/ba/";
 
@@ -64,14 +63,14 @@ public class DGDDeclarationService {
 		d.setChemicalName("Test");
 		d.setServerPort(serverPort);
 
-		d.setBaId((BigInteger) map.get("baId"));
-		d.setBaServerPort((String) map.get("baServerPort"));
-		d.setBaTerminal((String) map.get("baTerminal"));
-		d.setBaBerthingTime((Date) map.get("baBerthingTime"));
+		d.setBaId(new BigInteger("" + map.get("id")));
+		d.setBaServerPort((String) map.get("serverPort"));
+		d.setBaTerminal((String) map.get("terminal"));
+		d.setBaBerthingTime(new Date((Long) (map.get("berthingTime"))));
 
 		logger.info("Declaration - {}", d);
 
-		logger.info(contextUtil.getTechContext(cookie).toString());
+		// logger.info(contextUtil.getTechContext(cookie).toString());
 
 		// getPrincipal(cookie);
 

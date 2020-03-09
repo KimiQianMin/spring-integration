@@ -22,7 +22,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.tech.zuul.ZuulConstants;
 import com.tech.zuul.security.properties.SecurityProperties;
 import com.tech.zuul.security.validate.code.ValidateCodeException;
 import com.tech.zuul.security.validate.code.ValidateCodeProcessorHolder;

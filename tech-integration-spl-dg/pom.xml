@@ -43,11 +43,11 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>com.tech.integration</groupId>
 			<artifactId>tech-integration-fw</artifactId>
 			<version>${tech.security.version}</version>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 
 	<build>
