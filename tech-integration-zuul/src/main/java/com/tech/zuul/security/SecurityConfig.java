@@ -21,6 +21,7 @@ import org.springframework.security.web.session.SessionInformationExpiredStrateg
 
 import com.tech.zuul.security.authentication.TechAuthenticationFailureHandler;
 import com.tech.zuul.security.authentication.TechAuthenticationSuccessHandler;
+import com.tech.zuul.security.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.tech.zuul.security.authorisation.AuthorisationConfigurerManager;
 import com.tech.zuul.security.properties.SecurityProperties;
 import com.tech.zuul.security.validate.code.ValidateCodeGenerator;
@@ -58,6 +59,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private AuthorisationConfigurerManager authorisationConfigureManager;
+	
+	@Autowired
+	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
 	
 	@Bean
 	public PasswordEncoder passwordencoder() {
@@ -126,6 +130,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				//TODO: understand spring csrf
 			.csrf()
 				.disable()
+			.apply(smsCodeAuthenticationSecurityConfig)
 			;
 		
 		authorisationConfigureManager.config(http.authorizeRequests());
