@@ -18,11 +18,12 @@ public class TechContextUtil {
 	//@Autowired
 	//private SessionRepository repository;
 
-//	public TechContext getTechContext(String cookie) {
-//		String sessionId = StringUtils.substringAfter(cookie, "SESSION=");
-//		logger.info("sessionId - {}", sessionId);
-//		Session session = repository.getSession(sessionId);
-//		return new TechContext(session.getAttribute("userName"));
-//	}
+	public TechContext getTechContext(String cookie) {
+		String sessionId = StringUtils.substringAfter(cookie, "SESSION=");
+		logger.info("sessionId - {}", sessionId);
+		//Session session = repository.getSession(sessionId);
+		//return new TechContext(session.getAttribute("userName"));
+		return null;
+	}
 
 }

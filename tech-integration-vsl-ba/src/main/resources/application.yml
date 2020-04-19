@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: tech-integration-vsl
+  redis:
+    host: localhost
+    port: 6379
 eureka:
   client:
     healthcheck:

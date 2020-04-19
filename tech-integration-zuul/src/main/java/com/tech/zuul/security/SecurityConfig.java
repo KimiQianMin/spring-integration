@@ -9,6 +9,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,87 +38,91 @@ import com.tech.zuul.security.validate.code.sms.SmsCodeSender;
 @Configuration
 @EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	@Autowired
 	private SecurityProperties securityProperties;
-	
+
 	@Autowired
 	private TechAuthenticationSuccessHandler techAuthenticationSuccessHandler;
 
 	@Autowired
 	private TechAuthenticationFailureHandler techAuthenticationFailureHandler;
-	
+
 	@Autowired
 	private ValidateCodeFilter validateCodeFilter;
-	
+
 	@Autowired
 	private DataSource dataSource;
-	
+
 	@Autowired
 	private UserDetailsService techUserDetailsService;
-	
+
 	@Autowired
 	private SessionInformationExpiredStrategy expiredSessionStategy;
-	
+
 	@Autowired
 	private AuthorisationConfigurerManager authorisationConfigureManager;
-	
+
 	@Autowired
 	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
-	
+
 	@Bean
 	public PasswordEncoder passwordencoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
 	@ConditionalOnMissingBean(name = "imageCodeGenerator")
 	public ValidateCodeGenerator imageCodeGenerator() {
-		return new ImageCodeGenerator(); 
+		return new ImageCodeGenerator();
 	}
-	
+
 	@Bean
 	@ConditionalOnMissingBean(SmsCodeSender.class)
 	public SmsCodeSender smsCodeSender() {
-		return new DefaultSmsCodeSender(); 
+		return new DefaultSmsCodeSender();
 	}
-	
+
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository() {
 		JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
 		tokenRepository.setDataSource(dataSource);
 		return tokenRepository;
 	}
-	
+
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+		
+		RedisSerializer stringSerializer = new StringRedisSerializer();
+
+		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+		redisTemplate.setConnectionFactory(factory);
+		redisTemplate.setKeySerializer(stringSerializer);
+		redisTemplate.setValueSerializer(stringSerializer);
+		redisTemplate.setHashKeySerializer(stringSerializer);
+		redisTemplate.setHashValueSerializer(stringSerializer);
+		redisTemplate.afterPropertiesSet();
+		
+		return redisTemplate;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-		logger.info("securityProperties.getBrowser().toString() - {}", 
-				securityProperties.getBrowser().toString());
-		
-		http
-			.addFilterBefore(validateCodeFilter, 
-				UsernamePasswordAuthenticationFilter.class)
-			.formLogin()
+
+		logger.info("securityProperties.getBrowser().toString() - {}", securityProperties.getBrowser().toString());
+
+		http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class).formLogin()
 				.loginPage(securityProperties.getBrowser().getInitLoginPage())
 				.loginProcessingUrl(securityProperties.getBrowser().getLoginProcessingUrl())
-				.successHandler(techAuthenticationSuccessHandler)
-				.failureHandler(techAuthenticationFailureHandler)
-				.and()
-			.rememberMe()
-				.tokenRepository(persistentTokenRepository())
+				.successHandler(techAuthenticationSuccessHandler).failureHandler(techAuthenticationFailureHandler).and()
+				.rememberMe().tokenRepository(persistentTokenRepository())
 				.tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
-				.userDetailsService(techUserDetailsService)
-				.and()
-			.sessionManagement()
-				.invalidSessionUrl(securityProperties.getSession().getInvalidSessionUrl())
-				.maximumSessions(1)
-				//.maxSessionsPreventsLogin(true)
-				.expiredSessionStrategy(expiredSessionStategy)
-				.and()
-				.and()
+				.userDetailsService(techUserDetailsService).and().sessionManagement()
+				.invalidSessionUrl(securityProperties.getSession().getInvalidSessionUrl()).maximumSessions(1)
+				// .maxSessionsPreventsLogin(true)
+				.expiredSessionStrategy(expiredSessionStategy).and().and()
 //			.authorizeRequests()
 //				.antMatchers(
 //						securityProperties.getBrowser().getInitLoginPage(), 
@@ -127,14 +136,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //				.anyRequest()
 //					.authenticated()
 //					.and()
-				//TODO: understand spring csrf
-			.csrf()
-				.disable()
-			.apply(smsCodeAuthenticationSecurityConfig)
-			;
-		
+				// TODO: understand spring csrf
+				.csrf().disable().apply(smsCodeAuthenticationSecurityConfig);
+
 		authorisationConfigureManager.config(http.authorizeRequests());
-	
+
 	}
 
 }

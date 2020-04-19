@@ -1,15 +1,20 @@
 package com.tech.zuul.filter;
 
-import com.netflix.zuul.ZuulFilter;
-import com.netflix.zuul.context.RequestContext;
+import java.util.concurrent.TimeUnit;
+
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.session.Session;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpSession;
+import com.netflix.zuul.ZuulFilter;
+import com.netflix.zuul.context.RequestContext;
 
 @Component
 public class SessionSavingZuulPreFilter extends ZuulFilter {
@@ -17,7 +22,10 @@ public class SessionSavingZuulPreFilter extends ZuulFilter {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private SessionRepository repository;
+	private SessionRepository sessionRepository;
+
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 
 	@Override
 	public boolean shouldFilter() {
@@ -26,12 +34,24 @@ public class SessionSavingZuulPreFilter extends ZuulFilter {
 
 	@Override
 	public Object run() {
-		RequestContext context = RequestContext.getCurrentContext();
-		HttpSession httpSession = context.getRequest().getSession();
-		Session session = repository.getSession(httpSession.getId());
-		session.setAttribute("userName", "Kimi");
-		context.addZuulRequestHeader("Cookie", "SESSION=" + httpSession.getId());
-		logger.info("ZuulPreFilter session proxy: {}", session.getId());
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		RequestContext ctx = RequestContext.getCurrentContext();
+
+		logger.info("zuul userName >>>" + authentication.getName());
+
+		HttpSession httpSession = ctx.getRequest().getSession();
+		httpSession.setAttribute("userName", authentication.getName());
+
+		ctx.addZuulRequestHeader("sessionId", httpSession.getId());
+		ctx.addZuulRequestHeader("userName", authentication.getName());
+
+		logger.info("zuul sessionId >>>" + httpSession.getId());
+		logger.info("zuul userName >>>" + authentication.getName());
+		
+		// server.session.timeout = 600, follow the value configured inside application.yml
+		redisTemplate.opsForValue().set(httpSession.getId(), authentication.getName(), 600, TimeUnit.SECONDS);
+
 		return null;
 	}
 
